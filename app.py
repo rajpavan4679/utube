@@ -67,10 +67,10 @@ async def submit_url(request: Request, url: str = Form(...), language: str = For
         translation_text = transcript_text
         
     print(translation_text)
-        
+
     summarizer = pipeline("summarization")
 
-    result =summarizer(translation_text, max_length=250, min_length=100, do_sample=False)
+    result =summarizer(translation_text, max_length=250, min_length=120, do_sample=False)
     
 
     summary_text = result[0]['summary_text']
