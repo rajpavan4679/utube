@@ -50,7 +50,7 @@
                     <!-- </form> -->
                 </div>
               </form>   
-              <div id="statusMessage"></div>
+              <h5 id="statusMessage"></h5>
               </div>
               <div class="right"></div>
             </div>
@@ -58,17 +58,21 @@
             <script src="./static/script.js" type="module"></script>
         <script>
          
-        function updateStatusMessage() {
-            fetch('./static/status')
+         function updateStatusMessage() {
+            fetch('/status')
                 .then(response => response.text())
                 .then(message => {
-                    document.getElementById('statusMessage').innerText = message;
+                    const statusMessageDiv = document.getElementById('statusMessage');
+                    // Clear existing content
+                    statusMessageDiv.innerHTML = '';
+                    // Add new content
+                    statusMessageDiv.appendChild(document.createTextNode(message));
                 })
                 .catch(error => console.error('Error:', error));
         }
+        setInterval(updateStatusMessage, 1000);
 
-        // setInterval(updateStatusMessage, 1000); // Update every second
- 
+        
         document.getElementById("submitForm").addEventListener("submit", function(event) {
         event.preventDefault(); // Prevent the default form submission
 
@@ -77,25 +81,25 @@
         var language = document.getElementById("languageSelector").value;
         
   
-        // Send an HTTP POST request to the backend
-        fetch('/submit_url', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                url: url,
-                language: language
-            })
-        }).then(response => {
-            if (response.ok) {
-                console.log('URL submitted successfully');
-            } else {
-                console.error('Failed to submit URL');
-            }
-        }).catch(error => {
-            console.error('Error:', error);
-        });
+        // // Send an HTTP POST request to the backend
+        // fetch('/submit_url', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify({
+        //         url: url,
+        //         language: language
+        //     })
+        // }).then(response => {
+        //     if (response.ok) {
+        //         console.log('URL submitted successfully');
+        //     } else {
+        //         console.error('Failed to submit URL');
+        //     }
+        // }).catch(error => {
+        //     console.error('Error:', error);
+        // });
     });
       </script>
     </body>

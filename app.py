@@ -54,18 +54,16 @@ def index(request: Request):
 def update_status_message(message):
     with open("status.txt", "w") as status_file:
         status_file.write(message)
-    shutil.move("status.txt", "static/status.txt")    
-
-
+    
 @app.post("/submit_url", response_class=HTMLResponse)
 async def submit_url(request: Request, url: str = Form(...), language: str = Form(...)): 
     # Process the URL and language data as needed
     
-    print(f"Received URL: {url}, Language: {language}")
-    
     update_status_message("Performing the transcription")
 
-
+    print(f"Received URL: {url}, Language: {language}")
+    
+    
     download_audio(url, output_path="./output", filename="audio")
     audio_file_path = './output/audio.mp3'
     
