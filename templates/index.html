@@ -50,19 +50,33 @@
                     <!-- </form> -->
                 </div>
               </form>   
+              <div id="statusMessage"></div>
               </div>
               <div class="right"></div>
             </div>
 
             <script src="./static/script.js" type="module"></script>
         <script>
-         document.getElementById("submitForm").addEventListener("submit", function(event) {
+         
+        function updateStatusMessage() {
+            fetch('./static/status')
+                .then(response => response.text())
+                .then(message => {
+                    document.getElementById('statusMessage').innerText = message;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // setInterval(updateStatusMessage, 1000); // Update every second
+ 
+        document.getElementById("submitForm").addEventListener("submit", function(event) {
         event.preventDefault(); // Prevent the default form submission
 
         // Get the input values
         var url = document.getElementById("urlTextBox").value;
         var language = document.getElementById("languageSelector").value;
-
+        
+  
         // Send an HTTP POST request to the backend
         fetch('/submit_url', {
             method: 'POST',

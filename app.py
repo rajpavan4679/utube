@@ -40,9 +40,22 @@ class URLItem(BaseModel):
 def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
+@app.get('/status')
+def get_status_message():
+    with open("status.txt", "r") as status_file:
+        message = status_file.read()
+    return message
+
+
 @app.get('/result')
 def index(request: Request):
     return templates.TemplateResponse("result.html", {"request": request})
+
+def update_status_message(message):
+    with open("status.txt", "w") as status_file:
+        status_file.write(message)
+    shutil.move("status.txt", "static/status.txt")    
+
 
 @app.post("/submit_url", response_class=HTMLResponse)
 async def submit_url(request: Request, url: str = Form(...), language: str = Form(...)): 
@@ -50,6 +63,9 @@ async def submit_url(request: Request, url: str = Form(...), language: str = For
     
     print(f"Received URL: {url}, Language: {language}")
     
+    update_status_message("Performing the transcription")
+
+
     download_audio(url, output_path="./output", filename="audio")
     audio_file_path = './output/audio.mp3'
     
@@ -66,7 +82,8 @@ async def submit_url(request: Request, url: str = Form(...), language: str = For
         translation_text = transcript_text
         
     print(translation_text)
-
+    
+    update_status_message("Summarizing the content")
     # Initialize the summarization pipeline
     summarizer = pipeline("summarization")
 
